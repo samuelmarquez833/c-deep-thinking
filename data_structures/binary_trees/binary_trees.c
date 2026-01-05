@@ -87,6 +87,51 @@ Node *contains(Node *root, int val){
 
 
 
+int count_leaves(Node *root){
+    if (root == NULL){
+        return 0;    
+    }
+
+    int conteoPorLaIzq = 0;
+    int conteoPorLaDer = 0;
+    int conteoDeHojas = 0; 
+    if (root->left == NULL && root->right == NULL){
+        conteoDeHojas++;
+    } else{
+        conteoPorLaIzq = count_leaves(root->left);
+        conteoPorLaDer = count_leaves(root->right);
+        conteoDeHojas = conteoPorLaIzq + conteoPorLaDer;
+
+    }
+    return conteoDeHojas;
+}
+
+
+#include <stdio.h>
+
+void print_levels_bfs(Node *root) {
+    if (root == NULL) return;
+
+    Node *queue[100];
+    int front = 0, back = 0;
+
+    queue[back++] = root;
+
+    while (front < back) {
+        int level_size = back - front;
+
+        for (int i = 0; i < level_size; i++) {
+            Node *curr = queue[front++];
+            printf("%d ", curr->value);
+
+            if (curr->left)  queue[back++] = curr->left;
+            if (curr->right) queue[back++] = curr->right;
+        }
+        printf("\n");
+    }
+}
+
+
 
 int main(void) {
     Node *root = node_create(10);
@@ -106,9 +151,10 @@ int main(void) {
     printf("la direccion del 3 es: %d\n", two);
     
     Node *lookedFor = contains(root, 3);
-    printf("la direccion del numero buscado (3) es: %d", lookedFor);
+    printf("la direccion del numero buscado (3) es: %d\n", lookedFor);
     
-    
+    int conteoDeHojas = count_leaves(root);
+    printf("%d", conteoDeHojas);
 
     // listo: ya existe el árbol (3 nodos)
     return 0;
