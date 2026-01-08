@@ -19,32 +19,55 @@ struct Node {
 struct Graph {
     int amountOfNodes;
     struct Node *begins;
+    struct Node **directions;
 };
 
 
 
-struct Node *createNode(int val){
+struct Node *createNode(struct Graph *grafo, int val){
     struct Node *node = malloc(sizeof(struct Node ));
+
+    
+
     if (node == NULL){
         return NULL;
     }
 
+    
+    if (grafo->directions == NULL){
+        grafo->directions = malloc(sizeof(struct Node*));
+    } else{
+        grafo->directions = realloc(grafo->directions, ((grafo->amountOfNodes) + 1) * sizeof(struct Node*));
+    }
+    
+
     node->value = val;
     node->apunta = NULL;
     node->lenghtOfApunta = 0;
+
+
+
+    *(grafo->directions+grafo->amountOfNodes) = node;
+    grafo->amountOfNodes++;
+
+
     return node;
+
 
 }
 
+
+
+
+
+
+
 void makeConnection(struct Node *nodeA, struct Node *nodeB){
     
-    nodeA->lenghtOfApunta++;
-
-
     if (nodeA->apunta == NULL){
-        nodeA->apunta = malloc((nodeA->lenghtOfApunta) * sizeof(struct Node*));
+        nodeA->apunta = malloc(sizeof(struct Node*));
     } else {
-        nodeA->apunta = realloc(nodeA->apunta, (nodeA->lenghtOfApunta) * sizeof(struct Node*));
+        nodeA->apunta = realloc(nodeA->apunta, ((nodeA->lenghtOfApunta) + 1) * sizeof(struct Node*));
     }
 
     
@@ -55,39 +78,127 @@ void makeConnection(struct Node *nodeA, struct Node *nodeB){
     // al final del vector, pero quiero hacerlo con artimetica de puntos
     // explica no des codigo
     *(nodeA->apunta+nodeA->lenghtOfApunta) = nodeB;
+    nodeA->lenghtOfApunta++;
+
 }
+
+
+
+void matriz (struct Graph *grafo){
+    int n = grafo->amountOfNodes;
+
+    // asi todos emepiezan en 0>>     int array[4] = {};
+
+    int matriz[n][n]= {
+ 
+    };
+/*
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            struct Node *nodoDelMomento = *(grafo->directions+i);
+            if(i == j){
+                continue;
+            }
+            if (nodoDelMomento->apunta == NULL){
+                break;
+            } else {
+                for (int i = 0; i < nodoDelMomento->lenghtOfApunta; i++){
+                    if (*(grafo->directions+j) == *(nodoDelMomento->apunta+i));
+                    matriz[i][j] = 1;
+                }
+            }            
+        }
+    }*/
+
+    for (int i = 0; i < n; i++){
+        struct Node *nodoDelMomento = *(grafo->directions+i);
+
+        for (int j = 0; j < n; j++){
+            if(i == j){
+                continue;
+            }
+            if (nodoDelMomento->apunta == NULL){
+                
+            } else {
+                for (int k = 0; k < nodoDelMomento->lenghtOfApunta; k++){
+                    if (*(grafo->directions+j) == *(nodoDelMomento->apunta+k)){
+                        matriz[i][j] = 1;
+                    }
+                    
+                }
+            }            
+        }
+    }
+
+
+    for (int i = 0; i < n; i++){
+        for (int j = 0; j < n; j++){
+            printf("%d, ", matriz[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+
+
+void ciclos (){}
+
+
+
 
 
 int main (){
 
     struct Graph *grafo = malloc(sizeof(struct Graph));
-    struct Node *nodeA = createNode(5);
+    grafo->directions = NULL;
+    grafo->amountOfNodes = 0;
+    
+
+
+    struct Node *nodeA = createNode(grafo, 1);
+    struct Node *nodeB = createNode(grafo, 2);
+    struct Node *nodeC = createNode(grafo, 3);
+    struct Node *nodeD = createNode(grafo, 4);
+    struct Node *nodeE = createNode(grafo, 5);
+    struct Node *nodeF = createNode(grafo, 6);
+    struct Node *nodeG = createNode(grafo, 7);
+    struct Node *nodeH = createNode(grafo, 8);
+    struct Node *nodeI = createNode(grafo, 9);
     grafo->begins = nodeA;
-    struct Node *nodeB = createNode(6);
-    struct Node *nodeC = createNode(7);
+
     makeConnection(nodeA, nodeB);
     makeConnection(nodeA, nodeC);
+    makeConnection(nodeD, nodeA);
+    makeConnection(nodeC, nodeG);
+    makeConnection(nodeC, nodeH);
+    makeConnection(nodeG, nodeB);
+    makeConnection(nodeB, nodeE);
+    makeConnection(nodeB, nodeF);
+    makeConnection(nodeF, nodeE);
+    makeConnection(nodeE, nodeD);
+    makeConnection(nodeH, nodeI);
+    makeConnection(nodeI, nodeA);
+    
 
 
-    int largo = nodeA->lenghtOfApunta;
-    printf("%d\n", largo);
+    matriz(grafo);
+
+    printf("pausaaaaa \n");
+    printf("A: %p\n", nodeA);
+    printf("B: %p\n", nodeB);
+    printf("C: %p\n", nodeC);
+    printf("D: %p\n", nodeD);
+    printf("E: %p\n", nodeE);
+    printf("F: %p\n", nodeF);
+    printf("G: %p\n", nodeG);
+    printf("H: %p\n", nodeH);
+    printf("I: %p\n", nodeI);
+
+    ciclos(grafo);
 
 
-    struct Node *punteroActual;
-    for (int i = 0; i <= largo; i++){
-        punteroActual = *(nodeA->apunta+i);
-        printf("%p\n", punteroActual);
-    }
 
-    printf("porno\n");
-
-    //OJO recuerda el -> ya hace un primer *
-
-    printf("%p\n", nodeA->apunta);
-    printf("%p\n", nodeB);
-    printf("%p\n", nodeC);
-
+    return 0;
 
 }
-
 
