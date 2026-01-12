@@ -2,11 +2,6 @@
 #include <stdlib.h>
 
 
-/*
-asi como enl la lista enlazada no solo tienes a los nodos, sino que tiene s variables HEAD y TAIL
-aqui necesitas una estructura de grafo aparte de los nodos
-
-*/
 
 struct Node {
     int value;
@@ -14,13 +9,92 @@ struct Node {
     int lenghtOfApunta;
 };
 
-// usualmentelas demas cosas que se aniaden al la definicon del grafo con conveniencia
-// lo que defini aqui abajo es lo basico minimo, pero no estandar
 struct Graph {
     int amountOfNodes;
     struct Node *begins;
     struct Node **directions;
 };
+
+
+
+
+
+int funcionRecursiva(
+
+    struct Node *nodo,
+    int idx, 
+    int *vectorDeEstados,
+    struct Node **arrayDeDireccionesDeTodosLosNodosDelGrafo,
+    int cantidadDeNodosEnTodoElGrafo){
+
+
+
+    int cantidadDeNodosQuePoseeElNodoActual =  nodo->lenghtOfApunta;
+    
+    *(vectorDeEstados+idx) = 1;
+
+    int retorno = 0;
+
+    for(int i = 0; i < cantidadDeNodosQuePoseeElNodoActual; i++){
+        struct Node *subNodo = *(nodo->apunta+i);
+        for(int k = 0; k < cantidadDeNodosEnTodoElGrafo; k++){
+            if(subNodo == *(arrayDeDireccionesDeTodosLosNodosDelGrafo+k)){
+                if (*(vectorDeEstados+k) == 1){
+                    return 1;
+                } else if (*(vectorDeEstados+k) == 0){
+                    retorno = funcionRecursiva(subNodo, k, vectorDeEstados, arrayDeDireccionesDeTodosLosNodosDelGrafo, cantidadDeNodosEnTodoElGrafo);
+                    // claro, pones el return pq, si lo encontro, lo encontro, entoces, ya que? con eso ya estuvo, la reaccion en cadena hace qeu todos valgan uno, y se devuelva en todos, hasta llegar a la funcion original de abajo
+                    if (retorno == 1) return 1;
+                }
+            }
+        }
+    }
+
+
+    *(vectorDeEstados+idx) = 2;
+
+    return 0; 
+
+}
+
+
+void minimoUnCiclo(struct Graph *grafo){
+
+    int cantidadDeNodosEnTodoElGrafo = grafo->amountOfNodes;
+    struct Node **arrayDeDireccionesDeTodosLosNodosDelGrafo = grafo->directions; 
+
+    int *vectorDeEstados = malloc(cantidadDeNodosEnTodoElGrafo * sizeof(int));
+    for(int i = 0; i < cantidadDeNodosEnTodoElGrafo; i++){
+        *(vectorDeEstados+i) = 0;
+    }
+
+
+    struct Node *nodoActual = NULL;
+    for(int i = 0; i < cantidadDeNodosEnTodoElGrafo; i++){
+        nodoActual = *(grafo->directions+i);
+            if (vectorDeEstados[i] == 0) {
+                int output = funcionRecursiva(
+                    nodoActual,  
+                    i, 
+                    vectorDeEstados, 
+                    arrayDeDireccionesDeTodosLosNodosDelGrafo, 
+                    cantidadDeNodosEnTodoElGrafo);        
+            }
+        if (output == 1){
+            return;
+        }
+
+        
+    }
+
+    free(vectorDeEstados);
+}
+
+
+
+//
+// hacer la con una sola funcion
+// encontrar todos los ciclos
 
 
 
@@ -56,12 +130,6 @@ struct Node *createNode(struct Graph *grafo, int val){
 
 }
 
-
-
-
-
-
-
 void makeConnection(struct Node *nodeA, struct Node *nodeB){
     
     if (nodeA->apunta == NULL){
@@ -82,33 +150,10 @@ void makeConnection(struct Node *nodeA, struct Node *nodeB){
 
 }
 
-
-
 void matriz (struct Graph *grafo){
     int n = grafo->amountOfNodes;
 
-    // asi todos emepiezan en 0>>     int array[4] = {};
-
-    int matriz[n][n]= {
- 
-    };
-/*
-    for (int i = 0; i < n; i++){
-        for (int j = 0; j < n; j++){
-            struct Node *nodoDelMomento = *(grafo->directions+i);
-            if(i == j){
-                continue;
-            }
-            if (nodoDelMomento->apunta == NULL){
-                break;
-            } else {
-                for (int i = 0; i < nodoDelMomento->lenghtOfApunta; i++){
-                    if (*(grafo->directions+j) == *(nodoDelMomento->apunta+i));
-                    matriz[i][j] = 1;
-                }
-            }            
-        }
-    }*/
+    int matriz[n][n]= {};
 
     for (int i = 0; i < n; i++){
         struct Node *nodoDelMomento = *(grafo->directions+i);
@@ -118,7 +163,7 @@ void matriz (struct Graph *grafo){
                 continue;
             }
             if (nodoDelMomento->apunta == NULL){
-                
+                 
             } else {
                 for (int k = 0; k < nodoDelMomento->lenghtOfApunta; k++){
                     if (*(grafo->directions+j) == *(nodoDelMomento->apunta+k)){
@@ -140,8 +185,6 @@ void matriz (struct Graph *grafo){
 }
 
 
-
-void ciclos (){}
 
 
 
@@ -181,9 +224,7 @@ int main (){
     
 
 
-    matriz(grafo);
-
-    printf("pausaaaaa \n");
+    //  imprimimos la direccion de cada nodo
     printf("A: %p\n", nodeA);
     printf("B: %p\n", nodeB);
     printf("C: %p\n", nodeC);
@@ -193,8 +234,11 @@ int main (){
     printf("G: %p\n", nodeG);
     printf("H: %p\n", nodeH);
     printf("I: %p\n", nodeI);
+    printf("pausaaaaa \n");
 
-    ciclos(grafo);
+
+
+    minimoUnCiclo(grafo);
 
 
 
