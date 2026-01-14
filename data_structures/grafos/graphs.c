@@ -19,6 +19,31 @@ struct Graph {
 
 
 
+
+struct Queue{
+    struct Node *front;
+    struct Node *back;
+    int amountOfNodes;
+}
+
+
+
+
+void recorrerConBFS(Struct Graph *grafo){
+
+    
+    int cantidad_de_nodo = grafo->amountOfNodes;
+    // haog la lista de queue de ese tamanio pq no tenog otra opcion es el largo maximo al gu qpuede llegar
+    // pero lo sineto inceseario
+    struct Queue *cola = malloc(cantidad_de_nodo * sizeof(struct Node));
+
+    
+
+}
+
+
+
+
 int funcionRecursiva(
 
     struct Node *nodo,
@@ -92,7 +117,7 @@ void minimoUnCiclo(struct Graph *grafo){
 
 
 
-//
+
 // hacer la con una sola funcion
 // encontrar todos los ciclos
 
@@ -186,7 +211,10 @@ void matriz (struct Graph *grafo){
 
 
 
+//Dado un grafo y un nodo inicial, quiero visitar todos los nodos alcanzables, en orden por cercanía.
+void bfs(){
 
+}
 
 
 

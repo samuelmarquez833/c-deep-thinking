@@ -1,7 +1,8 @@
 /*
-dequeue
-peek
-freeQueue
+
+
+
+BFS usando queue
 */
 
 
@@ -43,6 +44,7 @@ bool isEmpty(struct Queue *cola){
 /*
 Entra por el BACK
 Sale por el FRONT
+
 */
 
 
@@ -58,10 +60,67 @@ void encolar(struct Queue *cola, struct Node *nodo){
         nodo->pointsTo = NULL;
 
         cola->amountOfNodes++;
+    }   
+}
+
+Node *desencolar(struct Queue *cola){
+    
+
+    if (cola->amountOfNodes == 0){
+        printf("nada que hacer, no tiene elementos la cola");        
+        // si se peude hacer un return aunuqe el tipo sea void
+        return NULL;
+    } 
+    
+    
+    struct Node *desencolado = cola->front;
+
+    if(cola->amountOfNodes == 1){
+        cola->front = NULL;
+        cola->back = NULL;
+    } else{
+        cola->front = desencolado->pointsTo;
+    }
+    
+    cola->amountOfNodes--;
+
+    return desencolado;
+
+
+}
+
+
+Node *peek (struct Queue *cola){
+    if (cola->amountOfNodes == 0){
+        return NULL;
+    }
+    return cola->front;
+}
+
+
+
+
+
+
+
+
+
+// que tal esta funcion?
+void freeQueue(struct Queue *cola){
+    int largo_cola = cola->amountOfNodes;
+
+    Struct Node *nodoActual = cola->front;
+
+    for (int i - 0; i < largo_cola-1; i++){
+        Struct Node *nodoProximo = nodoActual->front;
+        free(nodoActual);
+        nodoActual = nodoProximo;
     }
 
-    
+    free(cola);
 }
+
+
 
 
 
