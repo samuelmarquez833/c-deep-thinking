@@ -16,30 +16,101 @@ struct Graph {
 };
 
 
-
-
-
-
 struct Queue{
     struct Node *front;
     struct Node *back;
     int amountOfNodes;
-}
+};
 
 
-
-
-void recorrerConBFS(Struct Graph *grafo){
+void recorrerConBFS(struct Graph *grafo){
 
     
     int cantidad_de_nodo = grafo->amountOfNodes;
-    // haog la lista de queue de ese tamanio pq no tenog otra opcion es el largo maximo al gu qpuede llegar
-    // pero lo sineto inceseario
-    struct Queue *cola = malloc(cantidad_de_nodo * sizeof(struct Node));
+    
+    struct Node **visited = malloc(cantidad_de_nodo * sizeof(struct Node*));
+    struct Node **cola  = malloc(cantidad_de_nodo * sizeof(struct Node*));
+    // x pero esta bien inicializar
+    for (int i = 0; i < cantidad_de_nodo; i++) visited[i] = NULL;
+    for (int i = 0; i < cantidad_de_nodo; i++) cola[i] = NULL;
 
+
+
+    struct Node *primero = grafo->begins;
+
+
+    visited[0] = primero;
+    int visited_writtingIDX_largo = 1;
+
+    cola[0] = primero;
+    // de aqui sacas
+    int cola_read = 0;
+    // aqui metes
+    int cola_write_largo = 1;
     
 
+    while(cola_read < cola_write_largo){
+
+        struct Node *nodoActual = cola[cola_read];
+        cola[cola_read] = NULL;
+
+        struct Node **listaDeNodosDelNodoActual = nodoActual->apunta;
+        int listaDeNodosDelNodoActual_largo = nodoActual->lenghtOfApunta;
+
+
+        for (int i = 0; i < listaDeNodosDelNodoActual_largo; i++){
+
+            int yaVisitado = 0;
+
+            for (int j = 0; j < visited_writtingIDX_largo; j++){
+                if(visited[j] == listaDeNodosDelNodoActual[i]){
+                    //printf("El nodo ya fue visitado\n");
+                    yaVisitado = 1;
+                    break;
+                } 
+            }  
+
+            if (yaVisitado) {
+                continue; 
+            }
+
+            //digamso que B no ha sido visitado entonces
+            visited[visited_writtingIDX_largo]= listaDeNodosDelNodoActual[i];
+            visited_writtingIDX_largo++;
+            
+            cola[cola_write_largo]= listaDeNodosDelNodoActual[i];
+            cola_write_largo++;
+        }
+        cola_read++;
+    }
+
+
+    printf("\n\n\n");
+
+    for (int i = 0; i < cola_write_largo; i++){
+        printf("%p\n", *(visited+i));
+    }
+
+    free(visited);
+    free(cola);
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -97,8 +168,9 @@ void minimoUnCiclo(struct Graph *grafo){
     struct Node *nodoActual = NULL;
     for(int i = 0; i < cantidadDeNodosEnTodoElGrafo; i++){
         nodoActual = *(grafo->directions+i);
+        int output = 0;
             if (vectorDeEstados[i] == 0) {
-                int output = funcionRecursiva(
+                    output = funcionRecursiva(
                     nodoActual,  
                     i, 
                     vectorDeEstados, 
@@ -266,8 +338,7 @@ int main (){
 
 
 
-    minimoUnCiclo(grafo);
-
+    recorrerConBFS(grafo);
 
 
     return 0;
