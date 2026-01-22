@@ -142,6 +142,39 @@ int slidingWindowV2(int *vector, int largo, int k){
 }
 
 
+// Optimizacion del algoritmo correcto
+// como tal no se puede hacer MEJOR - no se puede hacer menos Big-O
+// solo lo hacemos mas claro o mas robutso, menots estado mneos I/O y a veces un poco mas rapido por constantes
+
+
+// lo hacemos reduciendo la cantidad de variables que hay, o sea como que dos variables se pueden expresar con una sola, pq tiene una relacion matematica
+// si algo es igual desde un inicio, se pueden remplazar
+//dejar cirstlina la logica sin movimientos inicesarios basicamente
+
+int slidingWindowOptimized(int *vector, int largo, int k){
+
+    int sumaActual = 0;
+    int sumaMasGrande = 0;
+
+
+    for (int i = 0; i < k; i++){
+        sumaActual += *(vector+i);
+        sumaMasGrande += *(vector+i);
+    }
+
+    int entra = 0;
+    int sale = 0;
+
+    for (int start = 1; start <= largo-k; start++){
+        entra = start+k-1;
+        sale = start-1;
+        sumaActual += *(vector+entra) - *(vector+sale);
+        if(sumaActual > sumaMasGrande){
+            sumaMasGrande = sumaActual; 
+        }
+    }
+    return  sumaMasGrande;
+}
 
 
 
@@ -151,11 +184,7 @@ int slidingWindowV2(int *vector, int largo, int k){
 
 
 
-// optimizacion de ese algoritmo - usamos chat  - como lo optimizas, que piensas?
 
-
-
-//optimizacicon de mi primer algoritmo - usamos chat - que piensas?
 
 
 
@@ -176,7 +205,8 @@ int main (){
         *(vector+i) = i;
     }
 
-    int sumaMasGrande = slidingWindowV2(vector, largo, k);
+    int sumaMasGrande = slidingWindowOptimized(vector, largo, k);
+    printf("%d", sumaMasGrande);
 
     free(vector);
 
