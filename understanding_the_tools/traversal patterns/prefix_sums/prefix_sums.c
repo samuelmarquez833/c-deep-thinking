@@ -9,34 +9,46 @@ para que sirve en la vida real?
 */
 
 
-// no entiendo la puta madre del cero de que si condigo un cero caundo voy restando encontes ya esta
-// pq la chingadera de que el primero es cero y ya esta impliciot - que verga?
 
-
-void prefix_sum(int *nums, int largo, int k){
+int prefix_sum(int *nums, int largo, int k){
     
 
     
-    // ya se que no tengo que hacer prefixes, pero lo voy a hacer, me vale verga
     int *prefixes = malloc (largo * sizeof(int));
     int acumulador = 0;
 
     for (int i = 0; i < largo; i++){
         acumulador += nums[i] ;
         *(prefixes+i) = acumulador;
-        printf("%d\n", *(prefixes+i)-3);
 
     } 
+
+
 
     int freq[20001] = {0};
     int offset = 10000;
     int cuentaDeCoincidencias = 0;
-    // esto lo hago solo para que el cero ya este incluido
-    freq[offset] = 1;
+    freq[offset]++;
+
+    for (int i = 0; i < largo; i++){
+
+        int prefix = *(prefixes+i);
+
+        int need = prefix - k;
 
 
-    return count;
+        int idx_need = offset + need;
+        cuentaDeCoincidencias += freq[idx_need];
+    
+        int idx_prefix = offset + prefix;
+        freq[idx_prefix]++;
+    
+    }
 
+
+    free(prefixes);
+
+    return cuentaDeCoincidencias;
 }
 
 
@@ -46,9 +58,42 @@ void prefix_sum(int *nums, int largo, int k){
 
 
 
+// lo mismo pero ahora creo el array adentro (hay un solo for) - bueno ni hay array 
+
+
+int prefix_sum_two(int *nums, int largo, int k){
+    
+
+    
+
+    int freq[20001] = {0};
+    int offset = 10000;
+    int cuentaDeCoincidencias = 0;
+    freq[offset]++;
+
+    int acumulador = 0;
+    for (int i = 0; i < largo; i++){
+
+        acumulador += nums[i];
+
+
+        int prefix = acumulador;
+
+        int need = prefix - k;
+
+
+        int idx_need = offset + need;
+        cuentaDeCoincidencias += freq[idx_need];
+    
+        int idx_prefix = offset + prefix;
+        freq[idx_prefix]++;
+    
+    }
 
 
 
+    return cuentaDeCoincidencias;
+}
 
 
 
@@ -58,27 +103,7 @@ void prefix_sum(int *nums, int largo, int k){
 int main () {
     int largo = 6;
     int nums[] = {2, -1, 3, 1, -2, 4};
-
-    prefix_sum(nums, largo, 3);
-
-
-
+    int output = prefix_sum_two(nums, largo, 3);
+    printf("%d\n", output);
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
