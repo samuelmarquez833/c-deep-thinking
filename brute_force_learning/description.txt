@@ -1,0 +1,2 @@
+This is basically to understand the bare minimum of a concept (bubble sort algorithm for example) 
+and try to aply it
