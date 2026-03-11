@@ -5,16 +5,17 @@
 #include "uthash.h"
 
 
-
+//1.  el hashmap usado aqui especifica que uses un char key
+// pero en realidad guardas un int (al menos antes estaba para char key) - corregir eso arriba
 
 typedef struct {
-    char key;
+    int key;
     int value;             
     UT_hash_handle hh;     
 } HashItem;
 
 
-void put(HashItem **map, char key, int value){
+void put(HashItem **map, int key, int value){
     HashItem *item;
     HASH_FIND(hh, *map, &key, sizeof(char), item);
 
@@ -29,7 +30,7 @@ void put(HashItem **map, char key, int value){
 }
 
 
-int get(HashItem *map, char key){
+int get(HashItem *map, int key){
     HashItem *item;
     HASH_FIND(hh, map, &key, sizeof(char), item);
     if (item == NULL) return -1;
@@ -59,7 +60,7 @@ void print_map(HashItem *map) {
 }
 
 
-void inc(HashItem **map, char key){
+void inc(HashItem **map, int key){
     HashItem *item;
     HASH_FIND(hh, *map, &key, sizeof(char), item);
 
@@ -129,27 +130,44 @@ void inc(HashItem **map, char key){
 void subarraySum(int* nums, int numsSize, int k) {
     HashItem *map = NULL;   
 
-
     int contador = 0;
 
     put(&map, 0, 1);
-    int newLength = numsSize+1;    
-    int *prefixes = malloc(newLength * sizeof(int));
+    int newLength = numsSize+1;   
+    // he declarado un array llamado prefixes el cual relamente no necesitaba
+    // int *prefixes = malloc(newLength * sizeof(int));
     int acumulador = 0;
 
     for (int i = 0; i < numsSize; i++){
         acumulador += *(nums+i);
-        *(prefixes+i) = acumulador;
-        put(&map, acumulador, 1);
+        
 
-        /*printf("acumulador: %d\n", acumulador );
-        printf("prefijo: %d\n", *(prefixes+i) );
-        printf("mapa[%d]: %d\n\n", acumulador, get(map, acumulador));*/
+        // 2. hace rato pusiste> put(&map, acumulador, 1);
+        // pero en realidad es>
+        inc(&ma, acumuladorp)
+        // por que mira, imaigna este ejemplo> {1, -1, 1, -1, 1} donde k=1
+        // cuanod vaya en la tercer aiteracion o sea en el segundo uno
+        // ya tienes tres subarrays que suman 1 el primer uno, luego el desde el primer uno hasta el segundo y por ultimo el seugndo uno
+        // pero si caunod llegas al primer MENOS UNO, dices, que pues el prefijo sea igual a uno (lo cual habias escrito)
+        // caunod llegues al segundo uno diras
+        // if (get(map, (acumulador-k)) == 1) lo cual es cierto
+        // aumenta contador en uno, pero la verdad es qeu eso solo vale por el subarrary del uno
+        // no tambien por el subarray de 1 -1 1
+        // pero si aumentas cada vez que vez el prefijo y caundo aumentas contador lo aumentas la cantidad de veces que esta guardado el prefijo
+        // te da bien
+
+        // resumen de lo anterior y regla general:
+        
+// regla:
+// si prefix_actual - CUALQUIER_N_VECES_prefix_anterior = k
+// entonces el subarray entre esos puntos suma k
+
         if (get(map, (acumulador-k)) == 1){
-            contador++;
+            // antes pusiste contador++;
+            //pero en verdad es:
+            contador += get(map, (acumulador-k));
         }
     }
-
     
     printf("%d\n", contador);
 
@@ -160,9 +178,9 @@ void subarraySum(int* nums, int numsSize, int k) {
 
 
 int main () {
-    int largo = 6;
-    int nums[] = {2, -1, 3, 1, -2, 4};
-    subarraySum(nums, largo, 3);
+    int largo = 5;
+    int nums[] = {1, -1, 1, -1, 1};
+    subarraySum(nums, largo, 1);
     return 0;
 }
 
