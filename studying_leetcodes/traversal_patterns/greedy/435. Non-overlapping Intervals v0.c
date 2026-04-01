@@ -6,7 +6,7 @@
 int** sort(int** intervals, int intervalsSize) {    
     for (int i = 1; i < intervalsSize; i++){
         int n = i;
-        for (int j = 1; j <= n; j++){
+        for (int j = 1; j <= i; j++){
             if (intervals[n][0] < intervals[i-j][0]){
                 //printf("Hay cambio \n");
                 int *tmp = intervals[n];
