@@ -76,8 +76,6 @@ void eraseOverlapIntervals(int** intervals, int intervalsSize, int* intervalsCol
 
 
 int main(){
-
-
     int intervalsSize = 4;
 
     int i1[2] = {1,2};
@@ -92,5 +90,6 @@ int main(){
     eraseOverlapIntervals(intervals, intervalsSize, &intervalsColSize);
 
     return  0;
+    
 }
 
