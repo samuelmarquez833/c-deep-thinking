@@ -274,9 +274,9 @@ int main(){
 */
 
 
-void dijkstraLeetcode(int actualNode, int endNode, int biggest, int *explored, int *estimate, int **adyacents, int *lengthByPosition, int **adyacentsWeights){
+void dijkstraLeetcode(int actualNode, int n, int *explored, int *estimate, int **adyacents, int *lengthByPosition, int **adyacentsWeights){
 
-    /*for (int i = 0; i < biggest; i++){
+    /*for (int i = 0; i < n; i++){
         printf("estadoDeExploracion de [%d]: %d\n", i, *(explored+i));
         printf("su estimado es de [%d]: %d\n", i, *(estimate+i));
         for (int j = 0; j < *(lengthByPosition+i); j++) {
@@ -287,11 +287,20 @@ void dijkstraLeetcode(int actualNode, int endNode, int biggest, int *explored, i
     }*/
 
 
-    
-    if (actualNode == endNode){
+    int validacion = 0;
+    for(int i = 0; i < n; i++){
+        if (*(explored+i) != 1 && *(estimate+i) != -1){
+            validacion = 1;
+            break;
+        }
+    }
+    if (validacion == 0){
         printf("llegamos a lo buscadoooooooooooooooooooooooooooooooooooooooooooooooooo\n\n");
         return;
     }
+
+
+
 
 
     int actualIdx =  actualNode-1;
@@ -304,10 +313,20 @@ void dijkstraLeetcode(int actualNode, int endNode, int biggest, int *explored, i
     for(int i = 0; i < largoDeAdyacentesDelNodoActual; i++){
         int actualNeighbor = *(*(adyacents+actualIdx)+i);
         currentStimate = *(estimate+actualIdx) + *(*(adyacentsWeights+actualIdx)+i);
+
+        printf("\nvecino: %d\n", actualNeighbor);
+        printf("estimado ya seteado %d\n", *(estimate+(actualNeighbor-1)));
+        printf("estimado nuevo %d\n", currentStimate);
+
+
+        if(*(estimate+(actualNeighbor-1)) == -1){
+            *(estimate+(actualNeighbor-1)) = currentStimate; 
+        }
         if(currentStimate < *(estimate+(actualNeighbor-1))){
             *(estimate+(actualNeighbor-1)) = currentStimate; 
         }
-        //printf("estimate mejor: %d\n", *(estimate+(actualNeighbor-1)));        
+        printf("estimado final: %d\n", *(estimate+(actualNeighbor-1)));
+        //printf("estimate mejor: %d\n", *(\nestimate+(actualNeighbor-1)));        
     }
 
 
@@ -318,8 +337,8 @@ void dijkstraLeetcode(int actualNode, int endNode, int biggest, int *explored, i
     int final = 0;
 
     int buffer = final;
-    for (int i = 0; i < biggest; i++){
-        if(*(explored+i) == 0){
+    for (int i = 0; i < n; i++){
+        if(*(explored+i) == 0 && *(estimate+i) != -1){
             chico = *(estimate+i);
             final = i+1;
             break;
@@ -331,9 +350,14 @@ void dijkstraLeetcode(int actualNode, int endNode, int biggest, int *explored, i
     }
 
 
-    for (int i = 0; i < biggest; i++){
+
+    printf("\n");
+    
+    for (int i = 0; i < n; i++){
+        printf("estimate de [%d]: %d\n", i+1, *(estimate+i) );
         if(*(explored+i) == 0){
-            if(*(estimate+i) < chico){
+            if(*(estimate+i) < chico && *(estimate+i) != -1 ){
+                printf("agarramos");
                 chico = *(estimate+i);
                 final = i+1;
             }
@@ -342,11 +366,14 @@ void dijkstraLeetcode(int actualNode, int endNode, int biggest, int *explored, i
         }
     }
 
-    printf("%d\n", final);
+
+    printf("\n\n\nneeegross de mierdaaaaaaa\n\n\n");
+
+    printf("escogimos al: %d\n", final);
 
     actualNode = final;
 
-    dijkstraLeetcode(actualNode, endNode, biggest, explored, estimate, adyacents, lengthByPosition, adyacentsWeights);
+    dijkstraLeetcode(actualNode, n, explored, estimate, adyacents, lengthByPosition, adyacentsWeights);
 
 }
 
@@ -363,41 +390,34 @@ void networkDelayTime(int** times, int timesSize, int* timesColSize, int n, int 
 
 
 
-    int biggest = 0;
-    for (int i = 0; i < timesSize; i++){
-        for (int j = 0; j < (*(timesColSize)-1); j++){
-            if(biggest < times[i][j]){
-                biggest = times[i][j];
-            }
-        }        
-    }
+
 
     //para accder a los datos del dos por ejemplo solo es explored 2-1
     
     // array compuesto de 0 y 1
-    int *explored = malloc(biggest * sizeof(int));
+    int *explored = malloc(n * sizeof(int));
     // estimados
-    int *estimate = malloc(biggest * sizeof(int));
+    int *estimate = malloc(n * sizeof(int));
 
     // values it self
-    int *values = malloc(biggest * sizeof(int));
+    int *values = malloc(n * sizeof(int));
 
 
 
 
-    int **adyacentsWeights = malloc(biggest * sizeof(int*));
-    int **adyacents = malloc(biggest * sizeof(int*));
+    int **adyacentsWeights = malloc(n * sizeof(int*));
+    int **adyacents = malloc(n * sizeof(int*));
     // this array has the lenghts of each subarray representing the neighbors in the array above - in a respective manner
-    int *lengthByPosition = malloc (biggest*sizeof(int));
+    int *lengthByPosition = malloc (n *sizeof(int));
 
     // for to fill the values array with the values 
     // and also to fill the adyacents array 
-    for (int i = 0; i < biggest; i++){
+    for (int i = 0; i < n; i++){
         *(explored+i) = 0;
         if((i+1) == k){
             *(estimate+i) = 0;
         } else{
-            *(estimate+i) = 10000;
+            *(estimate+i) = -1;
         }
         *(values+i) = (i+1);
         *(lengthByPosition+i) = 0;
@@ -426,15 +446,18 @@ void networkDelayTime(int** times, int timesSize, int* timesColSize, int n, int 
         *(*(adyacentsWeights+(first-1))+(*(lengthByPosition+(first-1))-1)) = times[i][2];
 
 
-        *(lengthByPosition+(second-1)) = *(lengthByPosition+(second-1)) + 1;
+
+        /*  *(lengthByPosition+(second-1)) = *(lengthByPosition+(second-1)) + 1;
         *(adyacents+(second-1)) = realloc(*(adyacents+(second-1)), sizeof(int)**(lengthByPosition+(second-1)));
         *(*(adyacents+(second-1))+(*(lengthByPosition+(second-1))-1)) = times[i][0];
         *(adyacentsWeights+(second-1)) = realloc(*(adyacentsWeights+(second-1)), sizeof(int)**(lengthByPosition+(second-1)));
-        *(*(adyacentsWeights+(second-1))+(*(lengthByPosition+(second-1))-1)) = times[i][2];
+        *(*(adyacentsWeights+(second-1))+(*(lengthByPosition+(second-1))-1)) = times[i][2];*/
+    
     }
 
-    /* to print the arrya fo adyacents
-    for (int i = 0; i < biggest; i++){
+    // to print the arrya fo adyacents
+    /*
+    for (int i = 0; i < n; i++){
         for (int j = 0; j < *(lengthByPosition+i); j++){
             printf("%d ", *(*(adyacents+i)+j));
         }
@@ -442,35 +465,38 @@ void networkDelayTime(int** times, int timesSize, int* timesColSize, int n, int 
     }*/
 
 
-    dijkstraLeetcode(k, n, biggest, explored, estimate, adyacents, lengthByPosition, adyacentsWeights);
+    dijkstraLeetcode(k, n, explored, estimate, adyacents, lengthByPosition, adyacentsWeights);
 
 
 
-
-    int out = -1;
-    for (int i = 0; i < biggest; i++){
-        if (*(estimate+i) > out && *(estimate+i) != 10000){
-        out = *(estimate+i);
+    printf("\n\n");
+    
+    int a = -1;
+    for (int i = 0; i < n; i++){
+        printf("%d\n", *(estimate+i));
+        if (*(estimate+i) > a && *(estimate+i) != 0){
+            a = *(estimate+i);
         }
     }
     
+    printf("\n\na: %d\n", a);
 
 
-    printf("out: %d\n", out);
 
 }
     
 
 void main (){
     int k = 2;
-    int n = 2;
-    
+    int n = 4;
 
     int timesColSize = 3;
-    int e1[3] = {1,2,1};
-    int e2[3] = {2,1,3};    
-    int timesSize = 2;
-    int* times[3] = {e1,e2};
+    int e1[3]  = {2,1,1};
+    int e2[3]  = {2,3,1};
+    int e3[3]  = {3,4,1};
+    
+    int timesSize = 3;
+    int* times[22] = {e1,e2,e3};
 
     networkDelayTime(times, timesSize, &timesColSize, n, k);
 }
