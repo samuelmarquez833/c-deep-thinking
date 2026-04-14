@@ -15,7 +15,8 @@ int* quickSort(int* arr, int largo){
     int pivotIdx = largo-1;
     int pivot = *(arr+pivotIdx);
     
-    if (largo == 1){
+    // no manejabnas cual es igual a 0, lo cual peude pasar perfectamente
+    if (largo <= 1){
         return arr;
     }
 
@@ -23,8 +24,8 @@ int* quickSort(int* arr, int largo){
     
     int i = 0;
     int j = pivotIdx-1;
-    while (j > i){
-        if (*(arr+i) < pivot){
+    while (j >= i){
+        /*if (*(arr+i) < pivot){
             i++;
         }
         if (*(arr+j) > pivot ){
@@ -32,6 +33,19 @@ int* quickSort(int* arr, int largo){
         }
 
         if(*(arr+i) > pivot && *(arr+j) < pivot ){
+            int buffer = *(arr+i);
+            *(arr+i) = *(arr+j);
+            *(arr+j) = buffer;
+            i++;
+            j--;
+        }*/
+        while (arr[i] < pivot) {
+            i++;
+        }
+        while (arr[j] > pivot) {
+            j--;
+        }
+        if (i <= j) {
             int buffer = *(arr+i);
             *(arr+i) = *(arr+j);
             *(arr+j) = buffer;
@@ -54,14 +68,14 @@ int* quickSort(int* arr, int largo){
 
     arrUno = quickSort(arrUno, largoUno);
 
-
+    /*mi problema
+    confiar en j después de la partición*/
     
     int largoDos = (largo - i)-1;
     int *arrDos = malloc(largoDos * sizeof(int));
-    j = j + 2;
+    int start = i + 1;
     for (int k = 0; k < largoDos; k++){
-        *(arrDos+k) = *(arr+j); 
-        j++;
+        arrDos[k] = arr[start + k];
     }
 
     // habias hecho la recursion del lado derecho excatmante igual que la del lado izquierdo
@@ -72,8 +86,10 @@ int* quickSort(int* arr, int largo){
     for (int k = 0; k < largo; k++){
         if (k < i){
             *(arr+k) = *(arrUno+a);
+            a++;
         } else if (k > i){
             *(arr+k) = *(arrDos+b);
+            b++;
         }
     }
 
