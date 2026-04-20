@@ -123,7 +123,6 @@ void main(){
         printf("%d\n", *(sorted+i));
         i++;
     }
-    
-
 }
+
 
