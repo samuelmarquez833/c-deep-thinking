@@ -30,7 +30,7 @@ int* merge (int *nums, int start, int end){
 
 
     for (int i = start; i <= finalUno; i++){
-        printf("Numeros mitad izquierda: %d\n", *(nums+i));
+        //printf("Numeros mitad izquierda: %d\n", *(nums+i));
     }
     
     merge(nums, startDos, end); 
@@ -45,54 +45,59 @@ int* merge (int *nums, int start, int end){
     printf("end> %d\n", end);*/
 
     for (int i = startDos; i <= end; i++){
-        printf("Numeros mitad derecha: %d\n", *(nums+i));
+        //printf("Numeros mitad derecha: %d\n", *(nums+i));
     }
 
-    //printf("llegamos a un final\n");
+
+
 
     int a = start;
     int b = startDos;
-    /*printf("a: %d\n", a);
-    printf("b: %d\n", b);
-    printf("end: %d\n", end);
-    printf("a: %d - b: %d\n", *(nums+a), *(nums+b));*/
 
 
-    //while(a <= b && b <= end ){
-    while (a <= finalUno && b <= end){
-        /*
+
+    
+
+    while (a < b && b <= end){
+
+
         if(*(nums+a) > *(nums+b)){
-            //printf("swap a>%d b>%d\n", *(nums+a), *(nums+b));
-            int buffer = *(nums+a);
-            *(nums+a) = *(nums+b);
-            *(nums+b) = buffer;
-            b++;
-        } else {
-            a++;
-        }*/
-            if (nums[a] <= nums[b]) {
-        a++;
-    } else {
-        int val = nums[b];
-        int k = b;
+            printf("cambio\n");
+            int val = *(nums+b);
+            int bIdx = b;
 
-        // desplazar a la derecha
-        while (k > a) {
-            nums[k] = nums[k - 1];
-            k--;
+            // evaluar esto: bIdx > a
+            // si o si es necesario, por que
+            // de esta forma te detienes, dejas de hacer retroceder al pobre val caundo sigue siendo menor que el elemenot a comparar 
+            // mira tu array 2 5 1 6
+            // si comienzas a retroceder a 1, sin parar, no importa, va a seguir haciendolo aunque ya haya comparado con el dos
+            // va a comparar con la basrua de atras
+            while(bIdx > a && val < *(nums+(bIdx-1))){
+                *(nums+bIdx) = *(nums+(bIdx-1));
+                bIdx--;
+            }   
+
+            *(nums+a) = val; 
+
+            a++;
+            b++;
+            finalUno++;
+        }   
+
+        else if(*(nums+a) < *(nums+b)){
+            printf("no cambio\n");
+            a++;
         }
 
-        nums[a] = val;
 
-        // actualizar punteros
-        a++;
-        b++;
-        finalUno++;
-    }
+
     }
 
 
- 
+
+    /*while (a < b && b <= end){
+
+    }*/
 
 
 
@@ -109,6 +114,7 @@ int* countSmaller(int* nums, int numsSize) {
 
     int end = numsSize-1;
     merge(nums, 0, end);
+
     for (int i = 0; i < numsSize; i++){
         printf("%d\n", *(nums+i));
     }
@@ -117,8 +123,8 @@ int* countSmaller(int* nums, int numsSize) {
 
 void main(){
 
-    int largo = 4;
-    int nums[4] = {5,2,6,1};
+    int largo = 6;
+    int nums[6] = {12,45,1,7,34,6};
 
     int *aja = malloc(largo * sizeof(int));
     aja = countSmaller(nums, largo);
