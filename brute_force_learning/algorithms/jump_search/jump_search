@@ -1,0 +1,67 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
+
+
+/*
+slucion actual
+un array de referencia...
+
+solucuiones que igual se me vienieron a la cabeza pero no seeee
+
+
+*/
+
+void jump (int *arr, int target, int n){
+    int step = (int)sqrt(n);
+    int no = 0;
+
+    int sobrante = (n%step);
+    int veces = (n/step) + sobrante;
+    
+
+
+    int *largos = malloc(veces * sizeof(int));
+    int i = 0;
+    while(i < step){
+        *(largos+i) = n/step;
+        i++;
+    }
+    *(largos+i) = sobrante;
+
+    
+    
+    int acumulador = -1;
+    i = 0;
+    while(i < veces){
+        acumulador += *(largos+i);
+        int quitar = *(largos+i)-1;
+
+        if(*(arr+(acumulador)) >=  target){    
+            //printf("inicio: %d\n", acumulador-quitar);
+            //printf("final: %d\n\n", acumulador);
+            for(int j = acumulador-quitar; j <= acumulador; j++){
+                if(*(arr+j) == target){
+                    no = 1;
+                    printf("idx: %d\n", j);
+                }
+            }
+            break;
+        }
+        i++;
+    }
+
+    (no == 0) ? printf("-1\n") : printf("\n");
+    
+}
+
+
+
+void main(){
+    int largo = 19;
+    int array[19] = {1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 33, 35, 37};
+    
+    jump(array, 35, largo);
+    // índice correcto: 17
+}
