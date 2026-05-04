@@ -1,5 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
 
 
 
@@ -31,6 +33,8 @@ alv
 
 */
 
+
+/*
 int main() {
     int a1[] = {7, 2, 9, 5, 3};          // desordenado
     int a2[] = {1, 3, 5, 7, 9, 11, 15};  // ordenado
@@ -46,3 +50,56 @@ int main() {
 
     return 0;
 }
+*/
+
+
+
+
+
+// segunda version
+
+void binarySearch(int * nums, int target, int largo){
+    
+    int left = 0;
+    int right = largo-1;
+
+    int mid = 0;
+    
+    // si o si se tiene re visar con el igual
+    while(left <= right){
+
+        mid = (right+left)/2;
+        // asi evitas un overflow en un array grande> mid = left + (right - left) / 2;
+        printf("right %d\n", right);
+        printf("left %d\n", left);
+        printf("mid %d\n", mid);
+        printf("num %d\n", *(nums+mid));
+
+        
+        if (*(nums+mid) == target){
+            printf("encontrado\n");
+            return;
+        } else if (*(nums+mid) > target){
+            right = mid-1;
+        } else if (*(nums+mid) < target){
+            left = mid+1;
+        }
+        
+    }
+
+    printf("not found\n");
+    return;
+
+
+}
+
+
+void main(){
+    int largo = 12;
+    int array[12] = {1,2,3,4,5,6,7,8,9,10,11,12};
+    
+    binarySearch(array, 7, largo);
+    // índice correcto: 8
+}
+
+
