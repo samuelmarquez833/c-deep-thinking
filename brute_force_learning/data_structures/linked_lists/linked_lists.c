@@ -3,7 +3,6 @@
 
 
 
-// next NO guarda un valor, guarda una dirección de otro nodo.
 struct Node {
     int value;
     struct Node *next;
