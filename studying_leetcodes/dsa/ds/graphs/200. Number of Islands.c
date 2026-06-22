@@ -31,20 +31,27 @@ struct Stack{
 struct Bosque* bosque;
 struct Stack* stack;
 int cuenta;
+bool** visitados;
 
 struct Node* crearYmeterNuevoNodo(int i, int j){
 
 
 
+
+
     // si en algun momento se coincide con la misma i y j entonces
     // es por que el arbol ya tiene esa coordenada
-    for(int m = 0; m < bosque->cuantosNodosTengo; m++){
+    /*for(int m = 0; m < bosque->cuantosNodosTengo; m++){
         struct Node esteNodoPodriaTenerLAcoordenada = *((bosque->todosLosNodosQueTengo)+m);
         if (esteNodoPodriaTenerLAcoordenada.i == i && esteNodoPodriaTenerLAcoordenada.j == j){
             // return, ni le hagas nada al bosqe ni al arbol, olvidate
             return NULL;
         } 
-    }
+    }*/
+
+    if (visitados[i][j]) return NULL;
+    visitados[i][j] = true;
+
 
     struct Node* nodo = malloc(sizeof(struct Node));
 
@@ -56,10 +63,7 @@ struct Node* crearYmeterNuevoNodo(int i, int j){
 
     bosque->cuantosNodosTengo += 1;
 
-    bosque->todosLosNodosQueTengo = realloc(
-        bosque->todosLosNodosQueTengo,
-        bosque->cuantosNodosTengo * sizeof(struct Node)
-    );
+
 
     *((bosque->todosLosNodosQueTengo)+((bosque->cuantosNodosTengo)-1)) = *nodo;
 
@@ -109,8 +113,7 @@ void meterAlStack(struct Stack* stack, struct Node* node ){
 
 void encontrarVecinos(struct Node* nodo, int i, int j, char** grid, int gridSize, int* gridColSize){
 
-    printf("i: %d\n", i);
-    printf("j: %d\n", j);
+
 
     int array[4] = {0,0,0,0};
     // gridSize: limite que i puede alcanzar
@@ -166,7 +169,6 @@ void encontrarVecinos(struct Node* nodo, int i, int j, char** grid, int gridSize
         
     } 
 
-    printf("\n\n");
 
 
 
@@ -204,10 +206,7 @@ void encontrarVecinos(struct Node* nodo, int i, int j, char** grid, int gridSize
         struct Node* nodo = stack->top;
         int a = nodo->i;
         int b = nodo->j;
-        printf("ELLLLLLLLLLLLLLLLLLLLLLLLLLLLLL PRIMOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO\n");
-        printf("a: %d\n", a);
-        printf("b: %d\n", b);
-        printf("\n");
+
 
 
         stack->top = (stack->top)->prev;
@@ -227,9 +226,7 @@ void encontrarVecinos(struct Node* nodo, int i, int j, char** grid, int gridSize
                     *((nodo->nodosaLosQueApunto)+0) = *der;
                     
                     if(grid[((nodo->nodosaLosQueApunto)+0)->i][((nodo->nodosaLosQueApunto)+0)->j] == '1' ){
-                        printf("derecha\n");
-                        printf("%c\n", grid[((nodo->nodosaLosQueApunto)+0)->i][((nodo->nodosaLosQueApunto)+0)->j]);
-                        printf("Entro al stack\n\n");
+
                         meterAlStack(stack, der);
                     }
                 }
@@ -242,9 +239,7 @@ void encontrarVecinos(struct Node* nodo, int i, int j, char** grid, int gridSize
                 if (abajo != NULL){
                     *((nodo->nodosaLosQueApunto)+1) = *abajo;
                     if(grid[((nodo->nodosaLosQueApunto)+1)->i][((nodo->nodosaLosQueApunto)+1)->j] == '1'){
-                        printf("abajo\n");
-                        printf("%c\n", grid[((nodo->nodosaLosQueApunto)+1)->i][((nodo->nodosaLosQueApunto)+1)->j]);
-                        printf("Entro al stack\n\n");
+
                         meterAlStack(stack, abajo);
                     }
                 }
@@ -260,9 +255,7 @@ void encontrarVecinos(struct Node* nodo, int i, int j, char** grid, int gridSize
                 if (izq != NULL){
                     *((nodo->nodosaLosQueApunto)+2) = *izq;
                     if(grid[((nodo->nodosaLosQueApunto)+2)->i][((nodo->nodosaLosQueApunto)+2)->j] == '1' ){
-                        printf("izq\n");
-                        printf("%c\n", grid[((nodo->nodosaLosQueApunto)+2)->i][((nodo->nodosaLosQueApunto)+2)->j]);
-                        printf("Entro al stack\n\n");
+
                         meterAlStack(stack, izq);
                     }
                 }
@@ -276,9 +269,7 @@ void encontrarVecinos(struct Node* nodo, int i, int j, char** grid, int gridSize
                 if(arriba != NULL){
                     *((nodo->nodosaLosQueApunto)+3) = *arriba;
                     if(grid[((nodo->nodosaLosQueApunto)+3)->i][((nodo->nodosaLosQueApunto)+3)->j] == '1' ){
-                        printf("arriba\n");
-                        printf("%c\n", grid[((nodo->nodosaLosQueApunto)+3)->i][((nodo->nodosaLosQueApunto)+3)->j]);
-                        printf("Entro al stack\n\n");
+
                         meterAlStack(stack, arriba);
                     }
                 }
@@ -287,13 +278,10 @@ void encontrarVecinos(struct Node* nodo, int i, int j, char** grid, int gridSize
             nodo->visited = true;
         }
 
-        printf("sig nodo\n");
     }
 
 
-    printf("hopla\n");
     cuenta += 1;
-    printf("cuenta: %d\n", cuenta);
     
 
 }
@@ -304,17 +292,19 @@ void proceso(int i, int j, char** grid, int gridSize, int* gridColSize){
     // saber si un nodo esta en el bosque en lo absoluto
     
     
-    for(int m = 0; m < bosque->cuantosNodosTengo; m++){
+    /*for(int m = 0; m < bosque->cuantosNodosTengo; m++){
         struct Node esteNodoPodriaTenerLAcoordenada = *((bosque->todosLosNodosQueTengo)+m);
-        
         if (esteNodoPodriaTenerLAcoordenada.i == i && esteNodoPodriaTenerLAcoordenada.j == j){
             // return, ni le hagas nada al bosqe ni al arbol, olvidate
             return;
         } 
+    }*/
+
+    if (visitados[i][j]) return;
 
 
+    //nodoNuevo->visited = true;
 
-    }
 
     /*
     como el nodo no esta
@@ -324,16 +314,23 @@ void proceso(int i, int j, char** grid, int gridSize, int* gridColSize){
     */
 
 
+
     struct Node* nodoNuevo = crearYmeterNuevoNodo(i, j);
 
-    nodoNuevo->visited = true;
+
+
+
 
     bosque->cuantosRootsTengo += 1;
+
+
+
 
     bosque->roots = realloc(
         bosque->roots,
         bosque->cuantosRootsTengo * sizeof(struct Node)
     );
+
 
     *((bosque->roots)+((bosque->cuantosRootsTengo)-1)) = *nodoNuevo;
 
@@ -342,16 +339,40 @@ void proceso(int i, int j, char** grid, int gridSize, int* gridColSize){
 
     encontrarVecinos(nodoNuevo, i, j, grid, gridSize, gridColSize);
 
-
-
-
-
-
 }
 
 
-void numIslands(char** grid, int gridSize, int* gridColSize) {
+
+
+
+
+int numIslands(char** grid, int gridSize, int* gridColSize) {
     
+
+    
+
+    stack = malloc(sizeof(struct Stack));
+    stack->top = NULL;
+
+    cuenta = 0;
+
+
+    bosque = malloc(sizeof(struct Bosque));
+    bosque->cuantosNodosTengo = 0;
+    bosque->cuantosRootsTengo = 0;
+
+int totalCeldas = 0;
+
+    visitados = malloc(gridSize * sizeof(bool*));
+    for (int i = 0; i < gridSize; i++) {
+        visitados[i] = calloc(gridColSize[i], sizeof(bool));
+            totalCeldas += gridColSize[i];
+    }
+
+    bosque->todosLosNodosQueTengo = malloc(totalCeldas * sizeof(struct Node));
+    bosque->roots = malloc(totalCeldas * sizeof(struct Node));
+
+
     for(int i = 0; i < gridSize; i++){
         for(int j = 0; j < *(gridColSize+i); j++){
             if(grid[i][j] == '1'){
@@ -361,23 +382,30 @@ void numIslands(char** grid, int gridSize, int* gridColSize) {
     }
 
 
-   
+
+
+    printf("cuenta: %d\n", cuenta);
+
+    return cuenta;
+
+
 }
+
 
 
 
 void main(){
 
-    stack = malloc(sizeof(struct Stack));
-    stack->top = NULL;
-
-    cuenta = 0;
 
 
-    int count = 0;
-    bosque = malloc(sizeof(struct Bosque));
-    bosque->cuantosNodosTengo = 0;
-    bosque->todosLosNodosQueTengo = malloc((bosque->cuantosNodosTengo)*sizeof(struct Node));
+
+
+
+
+
+
+
+
 
     // filas (cantidad de arrays)
     int m = 4;
@@ -399,7 +427,11 @@ char array4[5] = {'0','0','0','0','0'};
     numIslands(grid, m, n);
 
      
-     printf("cuenta: %d\n", cuenta);
+
+    
+
+
+
 
 
 }
