@@ -9,19 +9,32 @@ int main(){
         scanf("%d %d", &n, &k);
         int count = 0;
         int a = 1;
+        
+        if (k >= n){
+            printf("%d\n", n);
+            continue;
+        }
+
         while(n > 0){
-            for (int i = 0; i < k; i++){
-                if (n >= a){
-                    n -= a;
-                } else {
-                    break
-                    
+
+            if ((n - (k * a)) >= 0){
+                n -= (k * a);
+                count += k;
+            } else{
+                for (int i = 0; i < k; i++){
+                    if (n >= a){
+                        n -= a;
+                    } else {
+                        n = 0;
+                        break;
+                    }
+                    count++;
                 }
-                count++;
             }
             a = a * 2;
         }
-        return count;
+        printf("%d\n", count);
+        continue;
     }
 }
 
