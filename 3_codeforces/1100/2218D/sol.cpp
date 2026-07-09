@@ -1,11 +1,8 @@
 #include <cstdio>
 #include <cmath>
 
-
-
 long long int nextPrime(long long int  candidate){
     
-    //no olvidar: me eta llegando un primo que ya use, no me sirve de nada, le tengo que sumar si o si
     candidate++;
     
     int state = 0;
