@@ -2,10 +2,10 @@
 #include <stdlib.h>
 
 int min(int a, int b){
-    if (a < b) return a;
+    if (a < b) return a; 
     return b; 
 }
-
+Can you open up a folder
 void funcion(int n, char *a, char *b){
 
     int *dp = malloc((n+1) * sizeof(int));

@@ -16,12 +16,11 @@ void funcion (int s, char *string){
 
     if (cuentaDeCambios >= 3){
         cuentaDeCambios -= 2;
-    }
-
-    if (cuentaDeCambios == 2){
+    } else if (cuentaDeCambios == 2){
         cuentaDeCambios -= 1;
         
     }
+
 
     int costo = s + cuentaDeCambios;
 
@@ -30,16 +29,18 @@ void funcion (int s, char *string){
 }
 
 
+
 /*
 int main (){
 
     int n = 3;
-    int string[3] = {0,0,0};  
+    char string[3] = {'0','0','0',};  
     funcion(n, string);
 
     return 0;
 }
 */
+
 
 
 int main(){
@@ -48,7 +49,7 @@ int main(){
     while(t--){
         int n;
         scanf("%d", &n);
-        char *string = malloc((n) * sizeof(char));
+        char *string = malloc((n + 1) * sizeof(char));
         scanf("%s", string);
         
         funcion(n, string);
