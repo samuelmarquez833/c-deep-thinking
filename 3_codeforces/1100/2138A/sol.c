@@ -1,27 +1,24 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
 long long int fastPower(int power){
     if (power == 0){
         return 1;
     }
     long long int acumulated = 2;
-    long long int paraElFinal = 1;
+    long long int end = 1;
     while(power > 1){
         if(power % 2 == 0){
             acumulated = acumulated * acumulated;
             power = power / 2;
         } else{
-            paraElFinal = paraElFinal * acumulated;
+            end = end * acumulated;
             power = power - 1;
         }
     }
-    acumulated = acumulated * paraElFinal;
+    acumulated = acumulated * end;
     return acumulated;
 }
-
-
 
 void solucion(int k, long long int x){
     long long int a =  x;
@@ -42,16 +39,13 @@ void solucion(int k, long long int x){
             b = candidatoDosB;
             *(registro+idx) = 2;
         }
-
         idx++;
     }
-
     printf("%d\n", idx);
     idx--;
     for (idx; idx >= 0; idx--){
         printf("%d ", *(registro+idx));
     }
-
     free(registro);
 }
 

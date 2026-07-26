@@ -4,7 +4,7 @@
 
 long long int pref[1500005];
 
-void solucion(int n, int *ais){
+void solucion(int n, long long int *ais){
 
     // if n == 1 
     if (n == 1){
@@ -40,24 +40,19 @@ void solucion(int n, int *ais){
             }
             k++;
         }
-
-        printf("%d\n", diferencia);
-
+        printf("%lld\n", diferencia);
     }
-    
-
-
-
 }
 
 /*
 int main (){
-    int n = 4; 
-    long long ais[4] = {1000000000, 1000000000, 1000000000, 1000000000};
+    int n = 6; 
+    long long int ais[6] = {10,2,3,6,1,3};
     solucion(n, ais);
     return 1;
 }
 */
+
 
 
 int main(){
@@ -66,11 +61,11 @@ int main(){
     while(t--){
         int n;
         scanf("%d", &n);
-        int *a = malloc((n) * sizeof(int));
-        scanf("%d", a);
-        
+        long long int *a = malloc((n) * sizeof(long long int));
+        for(int i = 0; i < n; i++) scanf("%lld", &a[i]);
+
         solucion(n, a);
-        
         free(a);
     }
 }
+
